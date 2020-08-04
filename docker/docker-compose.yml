@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  php_server:
+    build: php
+    environment:
+        XDEBUG_CONFIG: "remote_host=0.0.0.0 idekey=PHPSTORM remote_enable=1 remote_port=9000 remote_autostart=1"
+        PHP_IDE_CONFIG: "serverName=php"
+    ports:
+      - '8081:80'
+    volumes:
+      - ../:/var/www/html/
+  db:
+    image: postgres:11.6
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=05Q6FXNq9UPhLg75eae5
+      - POSTGRES_DB=localdatabase
+
+volumes:
+  postgres_data:
