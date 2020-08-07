@@ -4,27 +4,19 @@
 namespace App\Services\EntityManagers;
 
 
-use App\Entity\Apartment;
 use App\Entity\Bed;
 use App\Entity\Booking;
+use App\Model\Request\BookingNew;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\EntityManagerInterface;
-use http\Exception\BadMethodCallException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookingManager extends AbstractManager
 {
-    public const ACTION_NEW = 'new';
-
-    public const ENTITY_NAME_START_DATE = 'start_date';
-    public const ENTITY_NAME_END_DATE = 'end_date';
-    public const ENTITY_NAME_COUNT_BAD = 'count_bad';
-    public const ENTITY_NAME_APARTMENT = 'apartment';
-
     /**
      * @var ApartmentManager
      */
@@ -36,7 +28,6 @@ class BookingManager extends AbstractManager
         $this->apartmentManager = $price;
     }
 
-
     /**
      * @return ApartmentManager
      */
@@ -46,13 +37,60 @@ class BookingManager extends AbstractManager
     }
 
     /**
+     * @param BookingNew $bookingNewData
+     * @return Booking
+     */
+    public function handleNew(BookingNew $bookingNewData): Booking
+    {
+        $apartment = $this->getApartmentManager()->getApartment($bookingNewData->getApartment());
+
+        $freeBeds = $this->getFreeBeds($apartment, $bookingNewData);
+
+        $price = $this->getApartmentManager()->calculatePrice(
+            $apartment->getPrice(),
+            $bookingNewData->getStartDate(),
+            $bookingNewData->getEndDate(),
+            $bookingNewData->getCountBad()
+        );
+
+        return $this->new(
+            $bookingNewData->getStartDate(),
+            $bookingNewData->getEndDate(),
+            array_slice($freeBeds, 0, $bookingNewData->getCountBad()),
+            $price
+        );
+    }
+
+    /**
+     * @param $apartment
+     * @param BookingNew $bookingNewData
+     * @return mixed
+     */
+    private function getFreeBeds($apartment, BookingNew $bookingNewData)
+    {
+        $freeBeds = $this->getObjectManager()
+            ->getRepository(Bed::class)
+            ->findFreeRooms(
+                $apartment->getId(),
+                $bookingNewData->getStartDate()->format('Y-m-d H:i:s'),
+                $bookingNewData->getEndDate()->format('Y-m-d H:i:s')
+            );
+
+        if (count($freeBeds) < $bookingNewData->getCountBad()) {
+            throw new Exception('No vacancies on the given date', Response::HTTP_BAD_REQUEST);
+        }
+
+        return $freeBeds;
+    }
+
+    /**
      * @param DateTime $startDate
      * @param DateTime $endDate
      * @param array $beds
      * @param int $price
      * @return Booking
      */
-    protected function new(DateTime $startDate, DateTime $endDate, array $beds, int $price): Booking
+    private function new(DateTime $startDate, DateTime $endDate, array $beds, int $price): Booking
     {
         try {
             $booking = (new Booking())
@@ -78,45 +116,6 @@ class BookingManager extends AbstractManager
         $this->getObjectManager()->flush();
 
         return $booking;
-    }
-
-    /**
-     * @param array $data
-     * @return Booking
-     */
-    public function handleNew(array $data): Booking
-    {
-        try {
-            $startDate = new DateTime($data[self::ENTITY_NAME_START_DATE]);
-            $endDate = new DateTime($data[self::ENTITY_NAME_END_DATE]);
-        } catch (\Exception $e) {
-            throw new Exception('Bad Request , incorrect data time ', Response::HTTP_BAD_REQUEST);
-        }
-
-        $apartment = $this->getApartmentManager()->getById($data[self::ENTITY_NAME_APARTMENT]);
-
-        $freeBeds = $this->getObjectManager()
-            ->getRepository(Bed::class)
-            ->findFreeRooms($apartment->getId(), $startDate->format('Y-m-d H:i:s'), $endDate->format('Y-m-d H:i:s'));
-
-        if(count($freeBeds) < $data[self::ENTITY_NAME_COUNT_BAD]) {
-            throw new Exception('No vacancies on the given date', Response::HTTP_BAD_REQUEST);
-        }
-
-
-        $price = $this->getApartmentManager()->calculatePrice(
-            $apartment->getPrice(),
-            $startDate,
-            $endDate,
-            $data[self::ENTITY_NAME_COUNT_BAD]
-        );
-
-        return $this->new(
-            $startDate,
-            $endDate,
-            array_slice($freeBeds, 0, $data[self::ENTITY_NAME_COUNT_BAD]),
-            $price
-        );
     }
 
 }

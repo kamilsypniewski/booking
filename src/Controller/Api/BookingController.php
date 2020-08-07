@@ -3,17 +3,23 @@
 
 namespace App\Controller\Api;
 
+use App\Model\Request\BookingNew;
 
 use App\Services\EntityManagers\BookingManager;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use http\Exception\InvalidArgumentException;
 
-use JsonException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as SWG;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Rest\Route("/api/booking")
@@ -22,8 +28,47 @@ class BookingController extends AbstractFOSRestController
 {
 
     /**
-     * @Rest\Post("/new", name="api_booking_new")
+     * Book a bed for a given apartment.
      *
+     * @SWG\Parameter(
+     *      name="body",
+     *      in="body",
+     *      @SWG\Schema(
+     *          type="string",
+     *          ref=@Model(type=BookingNew::class)
+     *      )
+     * )
+     *
+     * @SWG\Response(
+     *     response=201,
+     *     description="Correct execution of the booking",
+     *     @SWG\Schema(
+     *          @SWG\Property(
+     *              property="id",
+     *              type="integer",
+     *              example="123",
+     *              description="Booking id"
+     *          ),
+     *          @SWG\Property(
+     *              property="Beds",
+     *              title="Beds",
+     *              type="array",
+     *              description="List of reserved beds",
+     *                  @SWG\Items(
+     *                          type="string",
+     *                          example="417ab64f-e45b-35b8-a9cb-ad615d16d680"
+     *                  )
+     *          ),
+     *          @SWG\Property(
+     *              property="price",
+     *              type="integer",
+     *              example="1000",
+     *              description="Rental price"
+     *          )
+     *     )
+     * )
+     *
+     * @Rest\Post("/new", name="api_booking_new")
      * @param Request $request
      * @param BookingManager $bookingManager
      * @return JsonResponse
@@ -31,13 +76,16 @@ class BookingController extends AbstractFOSRestController
     public function new(Request $request, BookingManager $bookingManager): JsonResponse
     {
         try {
-            $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new InvalidArgumentException('Bad request, invalid json', Response::HTTP_BAD_REQUEST);
-        }
+            $encoders = [new JsonEncoder()];
+            $normalizers = [new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+            /** @var BookingNew $bookingNewRequest */
+            $bookingNewRequest = $serializer->deserialize($request->getContent(), BookingNew::class, 'json');
+            if (!($bookingNewRequest instanceof BookingNew)) {
+                throw new InvalidArgumentException('Bad request, invalid json', Response::HTTP_BAD_REQUEST);
+            }
 
-        try {
-            $booking = $bookingManager->handleNew($data);
+            $booking = $bookingManager->handleNew($bookingNewRequest);
 
             $bedsName = [];
             foreach ($booking->getBed() as $bed) {

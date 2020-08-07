@@ -70,8 +70,7 @@ class Price
      */
     public function calculate(int $price, DateTime $startDate, DateTime $endDate, int $countBed): int
     {
-        $this
-            ->setCountDay($startDate, $endDate)
+        $this->setCountDay($startDate, $endDate)
             ->setFinalPrice($this->getCountDay() * $price * $countBed)
             ->sale();
 
