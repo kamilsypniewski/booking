@@ -19,32 +19,36 @@ class BedRepository extends ServiceEntityRepository
         parent::__construct($registry, Bed::class);
     }
 
-    // /**
-    //  * @return Bed[] Returns an array of Bed objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findFreeRooms(int $apartmentId, $startDate, $endDate)
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $query =  $this->createQueryBuilder('bed')
+            ->leftjoin('bed.apartment', 'apartment')
+            ->leftjoin('bed.bookings', 'bookings')
+            ->andWhere('apartment.id = :apartmentId')
+            ->andWhere('(
+                (not (
+                    :startDate BETWEEN bookings.startDate AND bookings.endDate
+                    OR
+                    :endDate BETWEEN bookings.startDate AND bookings.endDate
+                    ) 
+                AND
+                not (
+                    bookings.startDate BETWEEN :startDate AND :endDate
+                    OR
+                    bookings.endDate BETWEEN :startDate AND :endDate
+                    )
+                )
+                or bookings.endDate is null
+                or bookings.startDate is null            
+            )')
+            ->setParameters([
+                    'apartmentId' => $apartmentId,
+                    'startDate' => $startDate,
+                    'endDate' => $endDate
+                ]
+            );
 
-    /*
-    public function findOneBySomeField($value): ?Bed
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $query->getQuery()
+            ->getResult();
     }
-    */
 }

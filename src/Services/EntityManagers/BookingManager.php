@@ -48,11 +48,11 @@ class BookingManager extends AbstractManager
     /**
      * @param DateTime $startDate
      * @param DateTime $endDate
-     * @param  $beds
+     * @param array $beds
      * @param int $price
      * @return Booking
      */
-    protected function new(DateTime $startDate, DateTime $endDate, $beds, int $price): Booking
+    protected function new(DateTime $startDate, DateTime $endDate, array $beds, int $price): Booking
     {
         try {
             $booking = (new Booking())
@@ -95,6 +95,15 @@ class BookingManager extends AbstractManager
 
         $apartment = $this->getApartmentManager()->getById($data[self::ENTITY_NAME_APARTMENT]);
 
+        $freeBeds = $this->getObjectManager()
+            ->getRepository(Bed::class)
+            ->findFreeRooms($apartment->getId(), $startDate->format('Y-m-d H:i:s'), $endDate->format('Y-m-d H:i:s'));
+
+        if(count($freeBeds) < $data[self::ENTITY_NAME_COUNT_BAD]) {
+            throw new Exception('No vacancies on the given date', Response::HTTP_BAD_REQUEST);
+        }
+
+
         $price = $this->getApartmentManager()->calculatePrice(
             $apartment->getPrice(),
             $startDate,
@@ -102,14 +111,10 @@ class BookingManager extends AbstractManager
             $data[self::ENTITY_NAME_COUNT_BAD]
         );
 
-        $bedCollection = $this->getObjectManager()
-            ->getRepository(Bed::class)
-            ->findBy(['apartment'=> $apartment], [],  $data[self::ENTITY_NAME_COUNT_BAD]);
-
         return $this->new(
             $startDate,
             $endDate,
-            $bedCollection,
+            array_slice($freeBeds, 0, $data[self::ENTITY_NAME_COUNT_BAD]),
             $price
         );
     }

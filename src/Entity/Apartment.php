@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\ApartmentRepository;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass=ApartmentRepository::class)
@@ -16,17 +15,17 @@ class Apartment
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $name;
+    private $name;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private int $price;
+    private $price;
 
     public function getId(): ?int
     {

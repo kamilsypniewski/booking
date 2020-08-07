@@ -39,9 +39,15 @@ class BookingController extends AbstractFOSRestController
         try {
             $booking = $bookingManager->handleNew($data);
 
+            $bedsName = [];
+            foreach ($booking->getBed() as $bed) {
+                $bedsName[] = $bed->getName();
+            }
+
             return new JsonResponse(
                 [
                     'id' => $booking->getId(),
+                    'beds' => $bedsName,
                     'price' => $booking->getPrice()
                 ],
                 Response::HTTP_CREATED

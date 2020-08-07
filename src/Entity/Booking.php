@@ -20,6 +20,11 @@ class Booking
     private $id;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
      * @ORM\Column(type="date")
      */
     private $startDate;
@@ -30,28 +35,35 @@ class Booking
     private $endDate;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $price;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Bed::class)
+     * @ORM\ManyToMany(targetEntity=Bed::class, inversedBy="bookings")
      */
-    private $beds;
+    private $bed;
 
     public function __construct()
     {
-        $this->beds = new ArrayCollection();
+        $this->bed = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getStartDate(): ?\DateTimeInterface
@@ -78,18 +90,6 @@ class Booking
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
     public function getPrice(): ?int
     {
         return $this->price;
@@ -105,15 +105,15 @@ class Booking
     /**
      * @return Collection|Bed[]
      */
-    public function getBeds(): Collection
+    public function getBed(): Collection
     {
-        return $this->beds;
+        return $this->bed;
     }
 
     public function addBed(Bed $bed): self
     {
-        if (!$this->beds->contains($bed)) {
-            $this->beds[] = $bed;
+        if (!$this->bed->contains($bed)) {
+            $this->bed[] = $bed;
         }
 
         return $this;
@@ -121,8 +121,8 @@ class Booking
 
     public function removeBed(Bed $bed): self
     {
-        if ($this->beds->contains($bed)) {
-            $this->beds->removeElement($bed);
+        if ($this->bed->contains($bed)) {
+            $this->bed->removeElement($bed);
         }
 
         return $this;

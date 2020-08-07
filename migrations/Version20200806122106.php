@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200806090724 extends AbstractMigration
+final class Version20200806122106 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -24,9 +24,9 @@ final class Version20200806090724 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE bed_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE booking_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE apartment (id INT NOT NULL, name VARCHAR(255) NOT NULL, price INT NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE bed (id INT NOT NULL, apartment_id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE bed (id INT NOT NULL, apartment_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E647FCFF176DFE85 ON bed (apartment_id)');
-        $this->addSql('CREATE TABLE booking (id INT NOT NULL, start_date DATE NOT NULL, end_date DATE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, price INT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE booking (id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, start_date DATE NOT NULL, end_date DATE NOT NULL, price INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE booking_bed (booking_id INT NOT NULL, bed_id INT NOT NULL, PRIMARY KEY(booking_id, bed_id))');
         $this->addSql('CREATE INDEX IDX_C022C5283301C60 ON booking_bed (booking_id)');
         $this->addSql('CREATE INDEX IDX_C022C52888688BB9 ON booking_bed (bed_id)');
