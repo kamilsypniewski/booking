@@ -10,7 +10,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use http\Exception\InvalidArgumentException;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -135,9 +135,13 @@ class BookingController extends AbstractFOSRestController
                 Response::HTTP_CREATED
             );
         } catch (Exception $e) {
+            $code = $e->getCode();
+            if ($code === 0 ) {
+                $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+            }
             return new JsonResponse(
                 ['message' => $e->getMessage()],
-                $e->getCode()
+                $code
             );
         }
     }

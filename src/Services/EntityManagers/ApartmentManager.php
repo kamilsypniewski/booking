@@ -66,9 +66,9 @@ class ApartmentManager extends AbstractManager
 
     /**
      * @param int $id
-     * @return Apartment
+     * @return Apartment|null
      */
-    private function getById(int $id): object
+    private function getById(int $id): ?Apartment
     {
         /** @var Apartment $apartment */
         return $this->getObjectManager()

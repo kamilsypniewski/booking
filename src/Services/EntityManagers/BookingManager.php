@@ -32,6 +32,8 @@ class BookingManager extends AbstractManager
      */
     public function handleNew(BookingNew $bookingNewData): Booking
     {
+        $apartmentId = $bookingNewData->getApartment();
+
         $apartment = $this->getApartmentManager()->getApartment($bookingNewData->getApartment());
 
         $freeBeds = $this->getFreeBeds($apartment, $bookingNewData);

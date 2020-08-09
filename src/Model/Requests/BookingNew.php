@@ -3,7 +3,7 @@
 namespace App\Model\Request;
 
 use DateTime;
-use http\Exception\RuntimeException;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -18,7 +18,7 @@ class BookingNew
     /**
      * @var DateTime
      */
-    private DateTime  $endDate;
+    private DateTime $endDate;
 
     /**
      * @var int
@@ -41,13 +41,14 @@ class BookingNew
     /**
      * @param string $startDate
      * @return BookingNew
+     * @throws Exception
      */
     public function setStartDate(string $startDate): BookingNew
     {
         try {
             $this->startDate = new DateTime($startDate);
         } catch (\Exception $e) {
-            throw new RuntimeException('Bad Request , incorrect data time ', Response::HTTP_BAD_REQUEST);
+            throw new Exception('Bad Request, incorrect start data time ', Response::HTTP_BAD_REQUEST);
         }
 
         return $this;
@@ -64,13 +65,20 @@ class BookingNew
     /**
      * @param string $endDate
      * @return BookingNew
+     * @throws Exception
      */
     public function setEndDate(string $endDate): BookingNew
     {
         try {
-            $this->endDate = new DateTime($endDate);
+            $endDate = new DateTime($endDate);
+
+            if ($this->getStartDate() > $endDate) {
+                throw new Exception('Bad Request, the end date cannot be less than the start date ', Response::HTTP_BAD_REQUEST);
+            }
+
+            $this->endDate = $endDate;
         } catch (\Exception $e) {
-            throw new RuntimeException('Bad Request , incorrect data time ', Response::HTTP_BAD_REQUEST);
+            throw new Exception('Bad Request, incorrect end data time ', Response::HTTP_BAD_REQUEST);
         }
 
         return $this;
@@ -87,9 +95,13 @@ class BookingNew
     /**
      * @param int $countBad
      * @return BookingNew
+     * @throws Exception
      */
     public function setCountBad(int $countBad): BookingNew
     {
+        if (0 > $countBad) {
+            throw new Exception('Bad Request , incorrect count bad ', Response::HTTP_BAD_REQUEST);
+        }
         $this->countBad = $countBad;
         return $this;
     }
