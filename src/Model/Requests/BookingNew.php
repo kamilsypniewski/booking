@@ -31,6 +31,14 @@ class BookingNew
     private int $apartment;
 
     /**
+     * @return DateTime
+     */
+    public function getStartDate(): DateTime
+    {
+        return $this->startDate;
+    }
+
+    /**
      * @param string $startDate
      * @return BookingNew
      */
@@ -48,9 +56,9 @@ class BookingNew
     /**
      * @return DateTime
      */
-    public function getStartDate(): DateTime
+    public function getEndDate(): DateTime
     {
-        return $this->startDate;
+        return $this->endDate;
     }
 
     /**
@@ -69,11 +77,11 @@ class BookingNew
     }
 
     /**
-     * @return DateTime
+     * @return int
      */
-    public function getEndDate(): DateTime
+    public function getCountBad(): int
     {
-        return $this->endDate;
+        return $this->countBad;
     }
 
     /**
@@ -89,9 +97,9 @@ class BookingNew
     /**
      * @return int
      */
-    public function getCountBad(): int
+    public function getApartment(): int
     {
-        return $this->countBad;
+        return $this->apartment;
     }
 
     /**
@@ -102,14 +110,6 @@ class BookingNew
     {
         $this->apartment = $apartment;
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getApartment(): int
-    {
-        return $this->apartment;
     }
 
 }

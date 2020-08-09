@@ -28,39 +28,6 @@ class Price
     }
 
     /**
-     * @param int $finalPrice
-     * @return Price
-     */
-    public function setFinalPrice(int $finalPrice): Price
-    {
-        $this->finalPrice = $finalPrice;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFinalPrice(): int
-    {
-        return $this->finalPrice;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCountDay(): int
-    {
-        return $this->countDay;
-    }
-
-    public function setCountDay(DateTime $startDate, DateTime $endDate): self
-    {
-        $this->countDay = $endDate->diff($startDate)->days + 1;
-        return $this;
-    }
-
-
-    /**
      * @param int $price
      * @param DateTime $startDate
      * @param DateTime $endDate
@@ -92,6 +59,38 @@ class Price
     public function getPromotion(): Promotion
     {
         return $this->promotion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountDay(): int
+    {
+        return $this->countDay;
+    }
+
+    public function setCountDay(DateTime $startDate, DateTime $endDate): self
+    {
+        $this->countDay = $endDate->diff($startDate)->days + 1;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFinalPrice(): int
+    {
+        return $this->finalPrice;
+    }
+
+    /**
+     * @param int $finalPrice
+     * @return Price
+     */
+    public function setFinalPrice(int $finalPrice): Price
+    {
+        $this->finalPrice = $finalPrice;
+        return $this;
     }
 
 }

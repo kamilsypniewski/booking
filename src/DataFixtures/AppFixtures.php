@@ -7,7 +7,6 @@ use App\Entity\Apartment;
 use App\Entity\Bed;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-
 use Faker\Factory;
 
 class AppFixtures extends Fixture
@@ -29,7 +28,7 @@ class AppFixtures extends Fixture
                 $manager->persist($bed);
             }
         }
-        
+
         $manager->flush();
     }
 }

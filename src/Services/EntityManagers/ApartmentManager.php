@@ -32,14 +32,6 @@ class ApartmentManager extends AbstractManager
     }
 
     /**
-     * @return Price
-     */
-    public function getPrice(): Price
-    {
-        return $this->price;
-    }
-
-    /**
      * @param int $price
      * @param DateTime $startDate
      * @param DateTime $endDate
@@ -52,13 +44,21 @@ class ApartmentManager extends AbstractManager
     }
 
     /**
+     * @return Price
+     */
+    public function getPrice(): Price
+    {
+        return $this->price;
+    }
+
+    /**
      * @param int $apartmentId
      * @return Apartment|object
      */
     public function getApartment(int $apartmentId): Apartment
     {
         $apartment = $this->getById($apartmentId);
-        if($apartment instanceof Apartment) {
+        if ($apartment instanceof Apartment) {
             return $apartment;
         }
         throw new Exception('The given apartment has not been found', Response::HTTP_NOT_FOUND);

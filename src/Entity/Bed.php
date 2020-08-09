@@ -34,21 +34,34 @@ class Bed
      */
     private Collection $bookings;
 
+    /**
+     * Bed constructor.
+     */
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -56,11 +69,18 @@ class Bed
         return $this;
     }
 
+    /**
+     * @return Apartment|null
+     */
     public function getApartment(): ?Apartment
     {
         return $this->apartment;
     }
 
+    /**
+     * @param Apartment|null $apartment
+     * @return $this
+     */
     public function setApartment(?Apartment $apartment): self
     {
         $this->apartment = $apartment;
@@ -76,6 +96,10 @@ class Bed
         return $this->bookings;
     }
 
+    /**
+     * @param Booking $booking
+     * @return $this
+     */
     public function addBooking(Booking $booking): self
     {
         if (!$this->bookings->contains($booking)) {
@@ -86,6 +110,10 @@ class Bed
         return $this;
     }
 
+    /**
+     * @param Booking $booking
+     * @return $this
+     */
     public function removeBooking(Booking $booking): self
     {
         if ($this->bookings->contains($booking)) {

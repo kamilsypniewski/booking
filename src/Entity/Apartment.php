@@ -27,16 +27,26 @@ class Apartment
      */
     private int $price;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -44,11 +54,18 @@ class Apartment
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getPrice(): ?int
     {
         return $this->price;
     }
 
+    /**
+     * @param int $price
+     * @return $this
+     */
     public function setPrice(int $price): self
     {
         $this->price = $price;

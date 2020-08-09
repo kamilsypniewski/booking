@@ -7,9 +7,7 @@ namespace App\Services\EntityManagers;
 use App\Entity\Bed;
 use App\Entity\Booking;
 use App\Model\Request\BookingNew;
-
 use DateTime;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,14 +24,6 @@ class BookingManager extends AbstractManager
     {
         parent::__construct($objectManager, $validator);
         $this->apartmentManager = $price;
-    }
-
-    /**
-     * @return ApartmentManager
-     */
-    public function getApartmentManager(): ApartmentManager
-    {
-        return $this->apartmentManager;
     }
 
     /**
@@ -59,6 +49,14 @@ class BookingManager extends AbstractManager
             array_slice($freeBeds, 0, $bookingNewData->getCountBad()),
             $price
         );
+    }
+
+    /**
+     * @return ApartmentManager
+     */
+    public function getApartmentManager(): ApartmentManager
+    {
+        return $this->apartmentManager;
     }
 
     /**
@@ -104,7 +102,7 @@ class BookingManager extends AbstractManager
             }
 
         } catch (\Throwable|Exception $e) {
-            throw new Exception('There is a problem with your booking details', Response::HTTP_INTERNAL_SERVER_ERROR );
+            throw new Exception('There is a problem with your booking details', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $errors = $this->getValidator()->validate($booking);

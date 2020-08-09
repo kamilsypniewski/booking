@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BookingRepository;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -50,52 +51,83 @@ class Booking
         $this->bed = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @param DateTimeInterface $createdAt
+     * @return $this
+     */
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getStartDate(): ?DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    /**
+     * @param DateTimeInterface $startDate
+     * @return $this
+     */
+    public function setStartDate(DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): self
+    /**
+     * @param DateTimeInterface $endDate
+     * @return $this
+     */
+    public function setEndDate(DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
 
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getPrice(): ?int
     {
         return $this->price;
     }
 
+    /**
+     * @param int $price
+     * @return $this
+     */
     public function setPrice(int $price): self
     {
         $this->price = $price;
@@ -111,6 +143,10 @@ class Booking
         return $this->bed;
     }
 
+    /**
+     * @param Bed $bed
+     * @return $this
+     */
     public function addBed(Bed $bed): self
     {
         if (!$this->bed->contains($bed)) {
@@ -120,6 +156,10 @@ class Booking
         return $this;
     }
 
+    /**
+     * @param Bed $bed
+     * @return $this
+     */
     public function removeBed(Bed $bed): self
     {
         if ($this->bed->contains($bed)) {

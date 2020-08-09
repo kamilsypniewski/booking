@@ -25,19 +25,19 @@ abstract class AbstractManager
     }
 
     /**
-     * @return EntityManagerInterface
-     */
-    protected function getObjectManager(): EntityManagerInterface
-    {
-        return $this->objectManager;
-    }
-
-    /**
      * @return ValidatorInterface
      */
     public function getValidator(): ValidatorInterface
     {
         return $this->validator;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    protected function getObjectManager(): EntityManagerInterface
+    {
+        return $this->objectManager;
     }
 
 }

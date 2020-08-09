@@ -25,9 +25,9 @@ class BedRepository extends ServiceEntityRepository
      * @param string $endDate
      * @return int|mixed|string
      */
-    public function findFreeRooms(int $apartmentId,string $startDate, string $endDate)
+    public function findFreeRooms(int $apartmentId, string $startDate, string $endDate)
     {
-        $query =  $this->createQueryBuilder('bed')
+        $query = $this->createQueryBuilder('bed')
             ->leftjoin('bed.apartment', 'apartment')
             ->leftjoin('bed.bookings', 'bookings')
             ->andWhere('apartment.id = :apartmentId')
