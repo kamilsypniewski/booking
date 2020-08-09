@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BookingRepository::class)
+
+ * @ORM\Table(indexes={@ORM\Index(name="endDate_idx", columns={"end_date"}),@ORM\Index(name="startDate_idx", columns={"start_date"})})
  */
 class Booking
 {
