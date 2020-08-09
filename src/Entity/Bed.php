@@ -17,22 +17,22 @@ class Bed
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\ManyToOne(targetEntity=Apartment::class)
      */
-    private $apartment;
+    private Apartment $apartment;
 
     /**
      * @ORM\ManyToMany(targetEntity=Booking::class, mappedBy="bed")
      */
-    private $bookings;
+    private Collection $bookings;
 
     public function __construct()
     {

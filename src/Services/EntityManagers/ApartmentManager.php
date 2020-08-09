@@ -5,10 +5,8 @@ namespace App\Services\EntityManagers;
 
 
 use App\Entity\Apartment;
-use App\Services\Apartment\Price;
-
+use App\Services\Booking\Price;
 use DateTime;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +14,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApartmentManager extends AbstractManager
 {
-
     /**
      * @var Price
      */

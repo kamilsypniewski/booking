@@ -1,25 +1,37 @@
 <?php
 
 
-namespace App\Services\Apartment;
+namespace App\Services\Booking;
 
 
 use DateTime;
 
 class Price
 {
-    protected const SEAL_NUMBER_OF_DAYS = 7;
-    protected const SEAL_DISCOUNT = 10;
-
+    /**
+     * @var int
+     */
     private int $countDay;
 
+    /**
+     * @var int
+     */
     private int $finalPrice;
+    /**
+     * @var Promotion
+     */
+    private Promotion $promotion;
+
+    public function __construct(Promotion $promotion)
+    {
+        $this->promotion = $promotion;
+    }
 
     /**
      * @param int $finalPrice
      * @return Price
      */
-    private function setFinalPrice(int $finalPrice): Price
+    public function setFinalPrice(int $finalPrice): Price
     {
         $this->finalPrice = $finalPrice;
         return $this;
@@ -28,7 +40,7 @@ class Price
     /**
      * @return int
      */
-    private function getFinalPrice(): int
+    public function getFinalPrice(): int
     {
         return $this->finalPrice;
     }
@@ -36,30 +48,17 @@ class Price
     /**
      * @return int
      */
-    private function getCountDay(): int
+    public function getCountDay(): int
     {
         return $this->countDay;
     }
 
-    private function setCountDay(DateTime $startDate, DateTime $endDate): self
+    public function setCountDay(DateTime $startDate, DateTime $endDate): self
     {
         $this->countDay = $endDate->diff($startDate)->days + 1;
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function sale(): self
-    {
-        if ($this->getCountDay() >= self::SEAL_NUMBER_OF_DAYS) {
-            $this->setFinalPrice(
-                $this->getFinalPrice() * (100 - self::SEAL_DISCOUNT) / 100
-            );
-        }
-
-        return $this;
-    }
 
     /**
      * @param int $price
@@ -72,9 +71,27 @@ class Price
     {
         $this->setCountDay($startDate, $endDate)
             ->setFinalPrice($this->getCountDay() * $price * $countBed)
-            ->sale();
+            ->promotion();
 
         return $this->getFinalPrice();
+    }
+
+    /**
+     * @return $this
+     */
+    private function promotion(): self
+    {
+        $this->getPromotion()->longLease($this);
+
+        return $this;
+    }
+
+    /**
+     * @return Promotion
+     */
+    public function getPromotion(): Promotion
+    {
+        return $this->promotion;
     }
 
 }

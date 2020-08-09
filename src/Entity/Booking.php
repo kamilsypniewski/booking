@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BookingRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,32 +18,32 @@ class Booking
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private DateTime $createdAt;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $startDate;
+    private DateTime $startDate;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $endDate;
+    private DateTime $endDate;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $price;
+    private int $price;
 
     /**
      * @ORM\ManyToMany(targetEntity=Bed::class, inversedBy="bookings")
      */
-    private $bed;
+    private Collection $bed;
 
     public function __construct()
     {

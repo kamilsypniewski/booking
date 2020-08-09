@@ -3,8 +3,8 @@
 namespace App\Model\Request;
 
 use DateTime;
-use http\Client\Response;
 use http\Exception\RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class BookingNew

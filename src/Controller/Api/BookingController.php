@@ -67,6 +67,43 @@ class BookingController extends AbstractFOSRestController
      *          )
      *     )
      * )
+     * @SWG\Response(
+     *     response=400,
+     *     description="Bad request error",
+     *     @SWG\Schema(
+     *          @SWG\Property(
+     *              property="error",
+     *              type="string",
+     *              example="Bad request, invalid json",
+     *              description="Bad request error"
+     *          ),
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=404,
+     *     description="Not Found",
+     *     @SWG\Schema(
+     *          @SWG\Property(
+     *              property="error",
+     *              type="string",
+     *              example="The given apartment has not been found",
+     *              description="Not Found"
+     *          ),
+     *     )
+     * )
+     *
+     * @SWG\Response(
+     *     response=500,
+     *     description="Internal Server Error",
+     *     @SWG\Schema(
+     *          @SWG\Property(
+     *              property="error",
+     *              type="string",
+     *              example="There is a problem with your booking details",
+     *              description="Internal Server Error"
+     *          ),
+     *     )
+     * )
      *
      * @Rest\Post("/new", name="api_booking_new")
      * @param Request $request

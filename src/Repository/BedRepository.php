@@ -19,7 +19,13 @@ class BedRepository extends ServiceEntityRepository
         parent::__construct($registry, Bed::class);
     }
 
-    public function findFreeRooms(int $apartmentId, $startDate, $endDate)
+    /**
+     * @param int $apartmentId
+     * @param string $startDate
+     * @param string $endDate
+     * @return int|mixed|string
+     */
+    public function findFreeRooms(int $apartmentId,string $startDate, string $endDate)
     {
         $query =  $this->createQueryBuilder('bed')
             ->leftjoin('bed.apartment', 'apartment')
